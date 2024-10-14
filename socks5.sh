@@ -11,6 +11,10 @@ sudo apt update -y
 # Install dante-server
 sudo apt install dante-server -y
 
+# Create the log file before starting the service
+sudo touch /var/log/danted.log
+sudo chown nobody:nogroup /var/log/danted.log
+
 # Create the configuration file
 sudo bash -c 'cat <<EOF > /etc/danted.conf
 logoutput: /var/log/danted.log
@@ -45,8 +49,14 @@ else
     sudo iptables -A INPUT -p tcp --dport 1080 -j ACCEPT
 fi
 
-# Restart dante-server
+# Edit the systemd service file for danted with sed
+sudo sed -i '/\[Service\]/a ReadWriteDirectories=/var/log' /usr/lib/systemd/system/danted.service
+
+# Reload the systemd daemon to apply the changes
+sudo systemctl daemon-reload
+
+# Restart the danted service
 sudo systemctl restart danted
 
-# Enable dante-server to start at boot
+# Enable danted to start at boot
 sudo systemctl enable danted
