@@ -70,3 +70,10 @@ sudo systemctl enable danted
 
 # Display the detected interface for verification
 echo "Dante SOCKS5 proxy is set up using the interface: $primary_interface"
+
+# Check if the danted service is active
+if systemctl is-active --quiet danted; then
+    echo -e "\nSocks5 server has been established and is running on port - 1080 for user: @$username"
+else
+    echo -e "\nFailed to start the Socks5 server. Please check the logs for more details: /var/log/danted.log"
+fi
