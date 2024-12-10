@@ -1,8 +1,8 @@
 #!/bin/bash
 
-echo -e "Please enter the username for the socks5 proxy:"
+echo -e "Please enter the username for the SOCKS5 proxy:"
 read username
-echo -e "Please enter the password for the socks5 proxy:"
+echo -e "Please enter the password for the SOCKS5 proxy:"
 read -s password
 
 # Update repositories
@@ -15,11 +15,18 @@ sudo apt install dante-server -y
 sudo touch /var/log/danted.log
 sudo chown nobody:nogroup /var/log/danted.log
 
+# Automatically detect the primary network interface
+primary_interface=$(ip route | grep default | awk '{print $5}')
+if [[ -z "$primary_interface" ]]; then
+  echo "Could not detect the primary network interface. Please check your network settings."
+  exit 1
+fi
+
 # Create the configuration file
-sudo bash -c 'cat <<EOF > /etc/danted.conf
+sudo bash -c "cat <<EOF > /etc/danted.conf
 logoutput: /var/log/danted.log
 internal: 0.0.0.0 port = 1080
-external: eth0
+external: $primary_interface
 method: username
 user.privileged: root
 user.notprivileged: nobody
@@ -31,7 +38,7 @@ socks pass {
     from: 0.0.0.0/0 to: 0.0.0.0/0
     log: connect disconnect error
 }
-EOF'
+EOF"
 
 # Add user with password
 sudo useradd --shell /usr/sbin/nologin $username
@@ -60,3 +67,6 @@ sudo systemctl restart danted
 
 # Enable danted to start at boot
 sudo systemctl enable danted
+
+# Display the detected interface for verification
+echo "Dante SOCKS5 proxy is set up using the interface: $primary_interface"
