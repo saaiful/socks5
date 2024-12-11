@@ -69,7 +69,7 @@ fi
 # Install or Reconfigure Dante
 if [[ "$reconfigure" == "true" ]]; then
     sudo apt update -y
-    sudo apt install dante-server -y
+    sudo apt install dante-server curl -y
     echo -e "${GREEN}Dante SOCKS5 server installed successfully.${NC}"
 
     # Create the log file before starting the service
