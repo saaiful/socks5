@@ -23,11 +23,11 @@ wget https://raw.githubusercontent.com/saaiful/socks5/main/socks5.sh
 sudo bash socks5.sh
 ```
 
-You'll be prompted for a username and password. These will be the credentials for the SOCKS5 proxy.
+You will be prompted for various options such as `reconfiguring`, `adding users`, or `uninstalling` the SOCKS5 server if it is already installed. During installation, you'll also be prompted for a `username` and `password` for the proxy authentication.
 
 
 ## Testing the Proxy
-The proxy can be tested from a Windows machine using `curl`. If you don't have curl installed, it can be installed with the following command:
+The proxy can be tested from a Linux machine using `curl`. If you don't have curl installed, it can be installed with the following command:
 ```bash
 apt-get install curl
 ```
